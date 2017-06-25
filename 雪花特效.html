@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>js原生效果雪花特技</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				color: #ffffff;
+				font-size: 20px;
+				font-family:"微软雅黑";
+			}
+			body {
+				background: #00a0fc;
+				overflow: hidden;
+			}
+		</style>
+	<script>
+	window.onload = function(){
+		//模块化编程
+		var snowflake = (function () {
+			//窗口大小
+			var PageX = window.screen.width,
+				PageY = window.screen.height,
+				aSnow = [];
+			//雪花模板
+			function snow(x,y,xspeed,yspeed,xsin,size) {
+					this.node = document.createElement('div');
+					this.x = x;
+					this.y = y;
+					this.xspeed = xspeed;
+					this.yspeed = yspeed;
+					this.size = size;
+					this.createSnow = function () {
+					this.node.style.position = 'absolute';
+						this.node.style.top = this.y + 'px';
+						this.node.style.left = this.x + 'px';
+						this.node.innerHTML='*';
+						this.node.style.color="#fff";
+						document.body.appendChild(this.node);
+					};
+					this.createSnow();
+					this.snowMove = function () {
+					//垂直方向移动
+						this.node.style.top = parseInt(this.node.style.top) + this.yspeed + 'px';
+					//水平方向
+						this.node.style.left = parseInt(this.node.style.left) + this.xsin*Math.sin(this.xspeed) + "px";
+						this.node.style.fontSize = this.size + 'px';
+					};
+				}
+				//创建雪花
+				function createSnow  () {
+					aSnow.push(new snow(Math.random()*PageX,-50,0.02+Math.random()/10,1+Math.random(),Math.random()*30,20+Math.random()*30));
+				}
+				//雪花移动函数
+				function snowMove () {
+					var j;
+					for(j=0;j<aSnow.length;j++) {
+						aSnow[j].snowMove();
+						if(parseInt(aSnow[j].node.style.top)>PageY||parseInt(aSnow[j].node.style.left)>PageX) {
+							aSnow[j].node.parentNode.removeChild(aSnow[j].node);
+							aSnow.splice(j,1);
+						}
+					}
+				}
+				return {
+					snow: snow,
+					createSnow: createSnow,
+					snowMove: snowMove
+				};
+				})();
+				//每秒钟创建一个雪花
+		setInterval(snowflake.createSnow,1000);	
+		setInterval(snowflake.snowMove,10);
+	}
+	</script>
+	</head>
+	<body>
+	<!--
+		模块模式必须条件：
+		1.必须由外部的封闭函数，该函数必须至少被调用一次（每次调用都会创建一个新的模块实例
+		2.封闭函数必须返回至少一个内部函数，这样内部函数才能在私有作用域中形成闭包，并且可以访问或者修改私有状态
+	-->
+	</body>
+</html>
