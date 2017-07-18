@@ -1,0 +1,125 @@
+* {
+	padding: 0;
+	margin: 0;
+	
+}
+/*
+ * 给body设置100%的高度和宽度，这样就会根据浏览器屏幕大小自动适配
+ */
+body {
+	width: 100%;
+	height: 100%;
+}
+#contain {
+	width: 620px;
+	height: 450px;
+	margin: 0 auto;
+	margin:100px;
+	border-radius: 1px;
+	position: relative;
+}
+/*
+ * 游戏区的DIV，这个大小是计算出来的，取决于小方块的大小
+ * 这里设置小方块的大小为50px*50px；
+ */
+#game {
+	width: 450px;
+	height: 450px;
+	border-radius: 5px;
+	display: inline-block;
+	background: #ffe171;
+	box-shadow: 0 0 10px #ffe171;
+	position: absolute;
+}
+/*
+ * 小方块的大小，定位为绝对定位，这样改变位置不会影响其他元素的位置，
+ * 宽高都是149px。注意了，我们还设置了box-shadow:1px 1px 2px #777 ；
+ * 所以总宽度等于150px；transition：.3s设置过渡时间，是css3属性；
+ */
+#game div {
+	width: 149px;
+	height:149px;
+	box-shadow: 1px 1px 2px #777;
+	background: #20a6fa;
+	color: #fff;
+	text-align: center;
+	font-size: 150px;
+	line-height: 150px;
+	cursor: pointer;
+	position: absolute;
+	-webkit-transition: .3s;/*浏览器前缀，兼容其他浏览器 chrome*/
+       -moz-transition: .3s;/*firefox*/
+        -ms-transition: .3s;/*ie*/
+         -o-transition: .3s;/*opera*/
+			transition: .3s;
+}
+#game div:hover { color: #ffe171;}
+#control {
+	width: 150px;
+	height: 450px;
+	display: inline-block;
+	float: right;
+}
+/*
+ * 设置控制区域的共同样式
+ */
+#control span,
+#control input {
+	height: 35px;
+	font-size: 20px;
+	color: #222;
+	margin-top:10px;
+	text-align: center;
+}
+input:nth-child(3) {
+	width: 100px;
+	line-height: 35px;
+	font-size: 28px;
+	background: #20a6fa;
+	color: #ffe171;
+	text-shadow: 1px 1px 2px #ffe171;
+	border-radius: 5px;
+	box-shadow: 2px 2px 5px #4c98f5;
+	
+	cursor: pointer;
+	display: inline-block;
+}
+input:nth-child(4) {
+	width: 100px;
+	line-height: 35px;
+	background: #20a6fa;
+	color: #ffe171;
+	text-shadow: 1px 1px 2px #ffe171;/*字体阴影*/
+	box-shadow: 2px 2px 5px #4c98f5;/*盒子阴影*/
+	border-radius: 5px;
+	cursor: pointer;
+}
+/*给Reset按钮设置属性*/
+#d1{
+    left: 0px;
+}
+#d2{
+    left: 150px;
+}
+#d3{
+    left: 300px;
+}
+#d4{
+    top: 150px;
+}
+#d5{
+    top: 150px;
+    left: 150px;
+}
+#d6{
+    top: 150px;
+    left: 300px;
+}
+#d7{
+    top: 300px;
+}
+#d8{
+    left: 150px;
+    top: 300px;
+}
+/*这是预先给每个小方块按照顺序排好位置*/

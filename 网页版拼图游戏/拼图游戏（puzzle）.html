@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>拼图游戏</title>
+		<link rel="stylesheet" href="puzzle.css">
+		<script type="text/javascript" src="puzzle.js"></script>
+	</head>
+	<body>
+		<div id="contain">
+			<div id="game">
+				<div id="d1" onclick="puzzle.move(1)">1</div>
+				<div id="d2" onclick="puzzle.move(2)">2</div>
+	            <div id="d3" onclick="puzzle.move(3)">3</div>
+	            <div id="d4" onclick="puzzle.move(4)">4</div>
+	            <div id="d5" onclick="puzzle.move(5)">5</div>
+	            <div id="d6" onclick="puzzle.move(6)">6</div>
+	            <div id="d7" onclick="puzzle.move(7)">7</div>
+	            <div id="d8" onclick="puzzle.move(8)">8</div>
+			</div>
+			<div id="control">
+				<span id="timeText">总用时</span>
+				<span id="timer"></span>
+				<input type='button' id="start" onclick="puzzle.start()" value="暂停">
+				<input  type='button' id="reset" onclick="puzzle.reset()" value="重来">
+			</div>
+		</div>
+	</body>
+</html>
