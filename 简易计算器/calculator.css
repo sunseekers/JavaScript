@@ -1,0 +1,33 @@
+* {
+	padding: 0;
+	margin: 0;
+}
+table {
+	/*
+	 * 为表格设置合并边框模型border-collapse: collapse;
+	 */
+	border-collapse: collapse;
+	margin: 0 auto;
+	border-spacing: 0px;
+}
+td {
+	width: 150px;
+	height: 100px;	
+}
+input {
+	width: 150px;
+	height: 100px;
+}
+.btn {
+	width: 150px;
+	font-size: 12px;
+}
+.btn_click {
+	width: 302px;
+	font-size: x-large;
+}
+.txt {
+	width: 600px;
+    font-size: x-large;
+    text-align: right;
+}
