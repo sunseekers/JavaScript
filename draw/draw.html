@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>随机抽奖</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<style type="text/css">
+body,html{width: 100%;height: 100%;}
+*{
+	padding: 0px;
+	margin: 0px;
+	font-size: 16px;
+	font-family: "Microsoft YaHei";
+}
+.radius{
+	width: 300px;
+	height: 300px;
+	margin: 100px auto;
+	position: relative; 
+}
+.radius canvas{
+	position: absolute;
+}
+#canvas{
+	background-color: white;
+	border-radius: 100%;
+}
+#canvas1,#canvas3{
+	left: 50px;
+	top: 50px;
+	z-index: 30;
+}
+#canvas2{
+	left: 75px;
+	top: 75px;
+	z-index: 20;
+}
+#canvas{
+    -o-transform:  transform 6s;
+	-ms-transform:  transform 6s;
+	-moz-transform:  transform 6s;		
+	-webkit-transform:  transform 6s;
+	transition: transform 6s;
+	-o-transform-origin:  50% 50%;
+	-ms-transform-origin:  50% 50%;
+	-moz-transform-origin:  50% 50%;		
+	-webkit-transform-origin:  50% 50%;
+	transform-origin: 50% 50%;
+}
+#btn{
+	width: 60px;
+	height: 60px;
+	left: 120px;
+	top: 120px;
+	border-radius: 100%;
+	position: absolute;
+	cursor: pointer;
+	border: none;
+	background: transparent;
+	outline: none;
+	z-index: 40;
+}
+</style>
+<script src='js/jquery-2.1.1.min.js'></script>
+<script src='js/index.js'></script>
+</head>
+<body>
+	<!--
+		1.把旋转盘画出来；
+		2.计算随机生成一个旋转角度；
+		3.点击按钮旋转
+	-->
+    <div class="radius">
+    	<canvas id="canvas" width="300" height="300"></canvas>
+    	<canvas id="canvas1" width="200" height="200"></canvas>
+    	<canvas id="canvas2" width="200" height="200"></canvas>
+    	<canvas id="canvas3" width="150" height="150"></canvas>
+    	<button id="btn"></button>
+    </div>
+</body>
+</html>
