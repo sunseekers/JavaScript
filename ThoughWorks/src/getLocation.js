@@ -1,20 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<script>
-  /*
+/*
   1. 题目要求输入两个值，一个是文本内容，一个是消息序列，即两个参数
   2. 判断无人机的ID和和坐标位置
   3. 无人机飞行时传回来的坐标是否有故障
   4. 消息测试
   比如： plane 1 1 1 plane 1 1 1 1 2 3
   */
-  function get(infomation,signalIndex){
-    let planeInfomation=infomation;
+  function getLocation(infomation,signalIndex){
+    let planeInfomation=infomation.trim();
     let planeName=planeInfomation.split(' ')[0];
     let regName=/^[A-Za-z0-9]+$/gi;
     let location=infomation.split(`${planeName}`);//此时是带有空格的数组里面包着字符串，为了后面计算坐标方便需要转换为数字数组
@@ -32,7 +24,8 @@
     if(regName.test(planeName)&&isNumber===true&&location[0].length==3){
       //如果消息不存在
       if(location.length<(signalIndex+1)){
-        alert(`Cannot found : ${signalIndex}`);
+        //alert(`Cannot found : ${signalIndex}`);有弹出框更方便看到效果
+        console.log(`Cannot found : ${signalIndex}`);
         return `Cannot found : ${signalIndex}`
       }else{//消息存在，应该对坐标值进行计算
         //保存初始位置
@@ -74,18 +67,17 @@
             }
           }
           if(locationArr[signalIndex][0]=='na'){
-            alert(` Error:${signalIndex}`);
-            return ` Error:${signalIndex}`;
+            console.log(`Error: ${signalIndex}`);
+            //alert(`Error: ${signalIndex}`);有弹出框更方便看到效果
+            return `Error: ${signalIndex}`;
           }else{
-            alert(`${planeName}${signalIndex} ${locationArr[signalIndex]}`);
-            return `${planeName}${signalIndex} ${locationArr[signalIndex]}`;
+            console.log(`${planeName} ${signalIndex} ${locationArr[signalIndex]}`);
+            //alert(`${planeName} ${signalIndex} ${locationArr[signalIndex]}`);有弹出框更方便看到效果
+            return `${planeName} ${signalIndex} ${locationArr[signalIndex]}`;
           }
         }
       }else{
-      alert("无人机处于故障");
+      console.log("无人机处于故障");
+      //alert("无人机处于故障");
     }
   }
-  get('plane 1 1 1 plane 1 1 1 1 2 3',3);
-</script>
-</body>
-</html>
