@@ -6,7 +6,12 @@ const audioOutputSelect = document.querySelector('select#audioOutput');
 const videoSelect = document.querySelector('select#videoSource');
 const selectors = [audioInputSelect, audioOutputSelect, videoSelect];
 
-audioOutputSelect.disabled = !('sinkId' in HTMLMediaElement.prototype);
+let video = document.querySelector('video');
+let canvas = document.getElementById('canvas');
+let context1 = canvas.getContext('2d');
+let photograph = document.querySelector("#photograph")
+
+// audioOutputSelect.disabled = !('sinkId' in HTMLMediaElement.prototype);
 
 function gotDevices(deviceInfos) {
   // Handles being called several times to update labels. Preserve values.
@@ -85,14 +90,14 @@ function start() {
       track.stop();
     });
   }
-  const audioSource = audioInputSelect.value;
+  // const audioSource = audioInputSelect.value;
   const videoSource = videoSelect.value;
   const constraints = {
-    audio: {
-      deviceId: audioSource ? {
-        exact: audioSource
-      } : undefined
-    },
+    // audio: {
+    //   deviceId: audioSource ? {
+    //     exact: audioSource
+    //   } : undefined
+    // },
     video: {
       deviceId: videoSource ? {
         exact: videoSource
@@ -102,9 +107,23 @@ function start() {
   navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
 }
 
-audioInputSelect.onchange = start;
-audioOutputSelect.onchange = changeAudioDestination;
+// audioInputSelect.onchange = start;
+// audioOutputSelect.onchange = changeAudioDestination;
 
 videoSelect.onchange = start;
 
 start();
+
+//拍照
+photograph.addEventListener("click", () => {
+  // if (!this.isOpenCamera) return alert("请开启摄像机权限")
+
+  let img = new Image();
+  img.src = "";
+  img.onload = function (ev) {
+    context1.drawImage(img, 0, 0);
+  }
+
+  context1.drawImage(video, 50, 50); //将video对象内指定的区域捕捉绘制到画布上指定的区域，实现拍照。
+  context1.drawImage(img, 50, 50);
+})
