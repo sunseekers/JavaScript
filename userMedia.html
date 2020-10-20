@@ -3,6 +3,8 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
   <title>摄像头画面web前端实时输出功能</title>
 </head>
 <style>
@@ -34,13 +36,14 @@
 
   .video,
   .canvas {
+
     border: 1px solid #d0d0d5;
   }
 </style>
 
 <body>
   <div class="wrapper">
-    <button id="openCamera" title="开启摄像头">`开启摄像头权限</button>
+    <button id="openCamera" title="开启摄像头">开启摄像头权限</button>
 
     <video width="700px" height="390px" class="video" autoplay="autoplay"></video>
 
@@ -59,8 +62,16 @@
     let context1 = canvas.getContext('2d');
     window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
 
+
     // 开启摄像头
     openCamera.addEventListener("click", () => {
+      if (window.stream) {
+        window.stream.getTracks().forEach(track => {
+          track.stop();
+          console.log('[wew]');
+
+        });
+      }
       navigator.getUserMedia = navigator.getUserMedia || navigator
         .webkitGetUserMedia || navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia
 
@@ -68,16 +79,16 @@
 
         if (this.isOpenCamera) return console.log('[已经开启过摄像头的权限了]');
 
-
         let exArray = getSources()
-        navigator.getUserMedia({
+        let constraints = window.constraints = {
           'video': {
             'optional': [{
               'sourceId': exArray[0] //0为前置摄像头，1为后置
             }]
           },
           'audio': true
-        }, successFunc, errorFunc); //success是获取成功的回调函数
+        }
+        navigator.getUserMedia(constraints, successFunc, errorFunc); //success是获取成功的回调函数
       } else {
         return alert('不支持访问用户媒体')
       }
@@ -85,6 +96,13 @@
 
     // 摄像机成功回调
     function successFunc(stream) {
+      window.stream = stream;
+      var videoTracks = stream.getVideoTracks();
+      alert('Got stream with constraints:', constraints);
+      alert('Using video device: ' + videoTracks[0].label);
+      stream.onremovetrack = function () {
+        alert('Stream ended');
+      };
       if (video.mozSrcObject !== undefined) {
         video.mozSrcObject = stream;
       } else {
@@ -133,8 +151,8 @@
         context1.drawImage(img, 0, 0);
       }
 
-      context1.drawImage(video, 0, 0); //将video对象内指定的区域捕捉绘制到画布上指定的区域，实现拍照。
-      context1.drawImage(img, 0, 0);
+      context1.drawImage(video, 50, 50); //将video对象内指定的区域捕捉绘制到画布上指定的区域，实现拍照。
+      context1.drawImage(img, 50, 50);
     })
   </script>
 </body>
