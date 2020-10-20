@@ -61,7 +61,7 @@
 
     // 开启摄像头
     openCamera.addEventListener("click", () => {
-
+      alert('navigator.mediaDevices', navigator.mediaDevices)
       if (!navigator.mediaDevices.getUserMedia) return alert(
         'Native device media streaming (getUserMedia) not supported in this browser.');
 
