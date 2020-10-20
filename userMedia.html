@@ -40,7 +40,7 @@
 
 <body>
   <div class="wrapper">
-    <button id="openCamera" title="开启摄像头">开启摄像头</button>
+    <button id="openCamera" title="开启摄像头">开启摄像头权限</button>
 
     <video width="700px" height="390px" class="video" autoplay="autoplay"></video>
 
@@ -61,11 +61,15 @@
 
     // 开启摄像头
     openCamera.addEventListener("click", () => {
-      alert('navigator.mediaDevices', navigator.mediaDevices)
-      if (!navigator.mediaDevices.getUserMedia) return alert(
+      navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator
+        .mozGetUserMedia ||
+        navigator.msGetUserMedia;
+
+      if (!navigator.getUserMedia) return alert(
         'Native device media streaming (getUserMedia) not supported in this browser.');
 
       if (this.isOpenCamera) return console.log('[已经开启过摄像头的权限了]');
+
 
       let exArray = getSources()
       const constraints = {
@@ -76,13 +80,20 @@
         },
         'audio': true
       }
-      navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-        successFunc(stream)
-        this.isOpenCamera = true
+      //   navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+      //     successFunc(stream)
 
-      }).catch(function (err) {
-        alert(err.name + ": " + err.message);
-      }); // 总是在最后检查错误;
+      //   }).catch(function (err) {
+      //     alert(err.name + ": " + err.message);
+      //   }); // 总是在最后检查错误;
+      navigator.getUserMedia({
+        'video': {
+          'optional': [{
+            'sourceId': exArray[0] //0为前置摄像头，1为后置
+          }]
+        },
+        'audio': true
+      }, successFunc, errorFunc); //success是获取成功的回调函数
     })
 
     // 摄像机成功回调
@@ -101,7 +112,10 @@
         }
       }
     }
-
+    //失败的回调
+    function errorFunc(e) {
+      alert('Error！' + e);
+    }
     // 获取存储设备源ID
     function getSources() {
       let exArray = []; //存储设备源ID
@@ -118,6 +132,7 @@
       } catch (e) {
         console.log('[获取存储设备源ID]', e)
       }
+      this.isOpenCamera = true
       return exArray
     }
 
