@@ -89,8 +89,8 @@
         }
         console.log('[navigator.mediaDevices]', navigator.mediaDevices.getUserMedia);
 
-        navigator.mediaDevices.getUserMedia(constraints).then(successFunc).catch(errorFunc);
-        // navigator.getUserMedia(constraints, successFunc, errorFunc); //success是获取成功的回调函数
+        // navigator.mediaDevices.getUserMedia(constraints).then(successFunc).catch(errorFunc);
+        navigator.getUserMedia(constraints, successFunc, errorFunc); //success是获取成功的回调函数
       } else {
         return alert('不支持访问用户媒体')
       }
@@ -121,7 +121,7 @@
     }
     //失败的回调
     function errorFunc(e) {
-      alert('Error！' + e);
+      alert('【Error！】回调失败' + e);
     }
     // 获取存储设备源ID
     function getSources() {
