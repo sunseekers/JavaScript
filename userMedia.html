@@ -68,7 +68,6 @@
       if (window.stream) {
         window.stream.getTracks().forEach(track => {
           track.stop();
-          console.log('[wew]');
 
         });
       }
@@ -88,7 +87,10 @@
           },
           'audio': true
         }
-        navigator.getUserMedia(constraints, successFunc, errorFunc); //success是获取成功的回调函数
+        console.log('[navigator.mediaDevices]', navigator.mediaDevices.getUserMedia);
+
+        navigator.mediaDevices.getUserMedia(constraints).then(successFunc).catch(errorFunc);
+        // navigator.getUserMedia(constraints, successFunc, errorFunc); //success是获取成功的回调函数
       } else {
         return alert('不支持访问用户媒体')
       }
@@ -101,7 +103,7 @@
       alert('Got stream with constraints:', constraints);
       alert('Using video device: ' + videoTracks[0].label);
       stream.onremovetrack = function () {
-        alert('Stream ended');
+        console.log('Stream ended');
       };
       if (video.mozSrcObject !== undefined) {
         video.mozSrcObject = stream;
