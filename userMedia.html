@@ -62,22 +62,14 @@
     let context1 = canvas.getContext('2d');
     window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
     // 切换到后置摄像头
+    let exArray = [];
+
     function gotDevices(deviceInfos) {
+      console.log('[deviceInfos]', deviceInfos);
+
       deviceInfos && deviceInfos.forEach(device => {
         if (device.kind === 'videoinput') {
-          let xx = ''
-          for (let key in device) {
-            xx += `${key}:==>${device[key]}   `
-            // setTimeout(() => {
-            // alert('[device]', xx);
-            // }, 2000)
-          }
-
-          alert(device, 'device')
-          console.log('[cc]', xx);
-
-          deviceInfosId = device.deviceId
-
+          exArray.push(sourceInfos[i].deviceId);
         }
       })
 
@@ -103,9 +95,9 @@
         const constraints = {
 
           video: {
-            deviceId: deviceInfosId ? {
-              exact: deviceInfosId
-            } : undefined
+            optional: [{
+              'sourceId': exArray[1] // 下标为0是前置摄像头，1为后置摄像头，所以PC不能进入该判断，否则画面会保持在第一帧不动
+            }]
           }
         };
         navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices)
