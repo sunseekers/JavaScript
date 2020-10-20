@@ -44,7 +44,9 @@
 <body>
   <div class="wrapper">
     <button id="openCamera" title="开启摄像头">开启摄像头权限</button>
-
+    <div class="select">
+      <label for="videoSource">Video source: </label><select id="videoSource"></select>
+    </div>
     <video width="700px" height="390px" class="video" autoplay="autoplay"></video>
 
     <button title="拍照" id="photograph">拍照</button>
@@ -60,17 +62,22 @@
     let video = document.querySelector('video');
     let canvas = document.getElementById('canvas');
     let context1 = canvas.getContext('2d');
+
+    const videoSelect = document.querySelector('select#videoSource');
+
     window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
     // 切换到后置摄像头
-    let exArray = [];
 
     function gotDevices(deviceInfos) {
-      console.log('[deviceInfos]', deviceInfos);
 
       deviceInfos && deviceInfos.forEach(device => {
+        const option = document.createElement('option');
+        option.value = device.deviceId;
         if (device.kind === 'videoinput') {
           videoSource = device.deviceId;
-          alert(videoSource, 'videoSource')
+          option.text = device.label || `camera ${videoSelect.length + 1}`;
+          videoSelect.appendChild(option);
+          console.log('[videoSource]', videoSource);
         }
       })
 
@@ -91,7 +98,7 @@
       if (navigator.getUserMedia) {
 
         if (this.isOpenCamera) return console.log('[已经开启过摄像头的权限了]');
-
+        videoSource = videoSelect.value;
         const constraints = {
           video: {
             video: {
@@ -113,6 +120,7 @@
       this.isOpenCamera = true
       video.srcObject = stream;
       navigator.mediaDevices.enumerateDevices();
+
     }
     //失败的回调
     function handleError(e) {
@@ -132,6 +140,7 @@
       context1.drawImage(video, 50, 50); //将video对象内指定的区域捕捉绘制到画布上指定的区域，实现拍照。
       context1.drawImage(img, 50, 50);
     })
+    videoSelect.onchange = startOpenCamera;
     startOpenCamera()
   </script>
 </body>
