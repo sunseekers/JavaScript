@@ -41,9 +41,9 @@
       margin: 20px auto;
     }
 
-    .video,
-    .canvas {
-      border: 1px solid #d0d0d5;
+    .video {
+      width: 100%;
+      height: 100%;
     }
   </style>
 
@@ -54,12 +54,7 @@
     <div class="select">
       <label for="videoSource">切换摄像头: </label><select id="videoSource"></select>
     </div>
-
-    <video id="video" playsinline autoplay></video>
-
-    <button title="拍照" id="photograph">拍照</button>
-
-    <canvas id="canvas" class="canvas"></canvas>
+    <video id="video" class="video" playsinline autoplay></video>
   </div>
 
   <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>

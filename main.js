@@ -4,15 +4,6 @@ const videoElement = document.querySelector('video');
 const videoSelect = document.querySelector('select#videoSource');
 const selectors = [videoSelect];
 
-let canvas = document.getElementById('canvas');
-let context1 = canvas.getContext('2d');
-
-videoElement.addEventListener('canplay', function () {
-  canvas.width = this.videoWidth;
-  canvas.height = this.videoHeight;
-  console.log('this', this)
-});
-
 function gotDevices(deviceInfos) {
   const values = selectors.map(select => select.value);
   selectors.forEach(select => {
@@ -75,8 +66,3 @@ function start() {
 videoSelect.onchange = start;
 
 start();
-
-//拍照
-photograph.addEventListener("click", () => {
-  context1.drawImage(video, 0, 0); //将video对象内指定的区域捕捉绘制到画布上指定的区域，实现拍照。
-})
