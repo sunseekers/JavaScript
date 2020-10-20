@@ -56,12 +56,34 @@
     let openCamera = document.querySelector("#openCamera")
     let photograph = document.querySelector("#photograph")
     window.isOpenCamera = false
-
+    let deviceInfosId = ''
     let video = document.querySelector('video');
     let canvas = document.getElementById('canvas');
     let context1 = canvas.getContext('2d');
     window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+    // 切换到后置摄像头
+    function gotDevices(deviceInfos) {
+      deviceInfos && deviceInfos.forEach(device => {
+        if (device.kind === 'videoinput') {
+          let xx = ''
+          for (let key in device) {
+            xx += `${key}:==>${device[key]}   `
+            // setTimeout(() => {
+            // alert('[device]', xx);
+            // }, 2000)
+          }
 
+          alert(device, 'device')
+          console.log('[cc]', xx);
+
+          deviceInfosId = device.deviceId
+
+        }
+      })
+
+    }
+
+    navigator.mediaDevices.enumerateDevices().then(gotDevices).catch((e) => alert('设备的列表失败', e));
 
     // 开启摄像头
     openCamera.addEventListener("click", () => {
@@ -78,30 +100,25 @@
 
         if (this.isOpenCamera) return console.log('[已经开启过摄像头的权限了]');
 
-        let exArray = getSources()
-        let constraints = window.constraints = {
-          'video': {
-            'optional': [{
-              'sourceId': exArray[0] //0为前置摄像头，1为后置
-            }]
-          },
-          'audio': true
-        }
-        console.log('[navigator.mediaDevices]', navigator.mediaDevices.getUserMedia);
+        const constraints = {
 
-        navigator.mediaDevices.getUserMedia(constraints).then(successFunc).catch(errorFunc);
-        // navigator.getUserMedia(constraints, successFunc, errorFunc); //success是获取成功的回调函数
+          video: {
+            deviceId: deviceInfosId ? {
+              exact: deviceInfosId
+            } : undefined
+          }
+        };
+        navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices)
       } else {
         return alert('不支持访问用户媒体')
       }
     })
 
     // 摄像机成功回调
-    function successFunc(stream) {
+    function gotStream(stream) {
       window.stream = stream;
       var videoTracks = stream.getVideoTracks();
-      alert('Got stream with constraints:', constraints);
-      alert('Using video device: ' + videoTracks[0].label);
+      this.isOpenCamera = true
       stream.onremovetrack = function () {
         console.log('Stream ended');
       };
@@ -118,9 +135,10 @@
           }
         }
       }
+      navigator.mediaDevices.enumerateDevices();
     }
     //失败的回调
-    function errorFunc(e) {
+    function handleError(e) {
       alert('【Error！】回调失败' + e);
     }
     // 获取存储设备源ID
