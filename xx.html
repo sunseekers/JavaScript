@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
+  <title>摄像头画面web前端实时输出功能</title>
+</head>
+<style>
+  .wrapper {
+    text-align: center;
+  }
+
+  button {
+    display: block;
+    line-height: 20px;
+    font-size: 14px;
+    text-align: center;
+    color: #4c5161;
+    border-radius: 4px;
+    border: 1px solid #d0d0d5;
+    padding: 10px 15px;
+    min-width: 80px;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: center;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: border-color .15s, box-shadow .15s, opacity .15s;
+    font-family: inherit;
+    cursor: pointer;
+    overflow: visible;
+    margin: 20px auto;
+  }
+
+  .video,
+  .canvas {
+
+    border: 1px solid #d0d0d5;
+  }
+</style>
+
+<body>
+  <div class="wrapper">
+    <button id="openCamera" title="开启摄像头">开启摄像头权限</button>
+    <div class="select">
+      <label for="videoSource">Video source: </label><select id="videoSource"></select>
+    </div>
+    <video width="700px" height="390px" class="video" autoplay="autoplay"></video>
+
+    <button title="拍照" id="photograph">拍照</button>
+
+    <canvas id="canvas" class="canvas" width="700" height="530"></canvas>
+
+  </div>
+  <script type="text/javascript">
+    let openCamera = document.querySelector("#openCamera")
+    let photograph = document.querySelector("#photograph")
+    window.isOpenCamera = false
+    let videoSource = ''
+    let video = document.querySelector('video');
+    let canvas = document.getElementById('canvas');
+    let context1 = canvas.getContext('2d');
+
+    const videoSelect = document.querySelector('select#videoSource');
+
+    window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+    // 切换到后置摄像头
+
+    function gotDevices(deviceInfos) {
+
+      deviceInfos && deviceInfos.forEach(device => {
+        const option = document.createElement('option');
+        option.value = device.deviceId;
+        if (device.kind === 'videoinput') {
+          videoSource = device.deviceId;
+          option.text = device.label || `camera ${videoSelect.length + 1}`;
+          videoSelect.appendChild(option);
+          console.log('[videoSource]', videoSource);
+        }
+      })
+
+    }
+
+    navigator.mediaDevices.enumerateDevices().then(gotDevices)
+
+    // 开启摄像头
+    function startOpenCamera() {
+      if (window.stream) {
+        window.stream.getTracks().forEach(track => {
+          track.stop();
+        });
+      }
+      navigator.getUserMedia = navigator.getUserMedia || navigator
+        .webkitGetUserMedia || navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia
+
+      if (navigator.getUserMedia) {
+
+        if (this.isOpenCamera) return console.log('[已经开启过摄像头的权限了]');
+        videoSource = videoSelect.value;
+        const constraints = {
+          video: {
+            video: {
+              deviceId: videoSource ? {
+                exact: videoSource
+              } : undefined
+            }
+          }
+        };
+        navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices)
+      } else {
+        return alert('不支持访问用户媒体')
+      }
+    }
+
+    // 摄像机成功回调
+    function gotStream(stream) {
+      window.stream = stream;
+      this.isOpenCamera = true
+      video.srcObject = stream;
+      navigator.mediaDevices.enumerateDevices();
+
+    }
+    //失败的回调
+    function handleError(e) {
+      alert('【Error！】回调失败' + e);
+    }
+
+    //拍照
+    photograph.addEventListener("click", () => {
+      if (!this.isOpenCamera) return alert("请开启摄像机权限")
+
+      let img = new Image();
+      img.src = "";
+      img.onload = function (ev) {
+        context1.drawImage(img, 0, 0);
+      }
+
+      context1.drawImage(video, 50, 50); //将video对象内指定的区域捕捉绘制到画布上指定的区域，实现拍照。
+      context1.drawImage(img, 50, 50);
+    })
+    videoSelect.onchange = startOpenCamera;
+    startOpenCamera()
+  </script>
+</body>
+
+</html>
