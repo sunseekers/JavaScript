@@ -69,13 +69,13 @@
 
       deviceInfos && deviceInfos.forEach(device => {
         if (device.kind === 'videoinput') {
-          exArray.push(sourceInfos[i].deviceId);
+          exArray.push(device.deviceId);
         }
       })
 
     }
 
-    navigator.mediaDevices.enumerateDevices().then(gotDevices).catch((e) => alert('设备的列表失败', e));
+    navigator.mediaDevices.enumerateDevices().then(gotDevices)
 
     // 开启摄像头
     openCamera.addEventListener("click", () => {
@@ -96,7 +96,7 @@
 
           video: {
             optional: [{
-              'sourceId': exArray[1] // 下标为0是前置摄像头，1为后置摄像头，所以PC不能进入该判断，否则画面会保持在第一帧不动
+              'sourceId': exArray[1] ? exArray[1] : exArray[0] // 下标为0是前置摄像头，1为后置摄像头，所以PC不能进入该判断，否则画面会保持在第一帧不动
             }]
           }
         };
