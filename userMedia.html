@@ -56,7 +56,7 @@
     let openCamera = document.querySelector("#openCamera")
     let photograph = document.querySelector("#photograph")
     window.isOpenCamera = false
-    let deviceInfosId = ''
+    let videoSource = ''
     let video = document.querySelector('video');
     let canvas = document.getElementById('canvas');
     let context1 = canvas.getContext('2d');
@@ -69,7 +69,8 @@
 
       deviceInfos && deviceInfos.forEach(device => {
         if (device.kind === 'videoinput') {
-          exArray.push(device.deviceId);
+          videoSource = device.deviceId;
+          alert(videoSource, 'videoSource')
         }
       })
 
@@ -79,25 +80,25 @@
 
     // 开启摄像头
     function startOpenCamera() {
-      // if (window.stream) {
-      //   window.stream.getTracks().forEach(track => {
-      //     track.stop();
-
-      //   });
-      // }
+      if (window.stream) {
+        window.stream.getTracks().forEach(track => {
+          track.stop();
+        });
+      }
       navigator.getUserMedia = navigator.getUserMedia || navigator
         .webkitGetUserMedia || navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia
 
       if (navigator.getUserMedia) {
 
         if (this.isOpenCamera) return console.log('[已经开启过摄像头的权限了]');
-        alert(exArray, 'exArray')
 
         const constraints = {
           video: {
-            optional: [{
-              'sourceId': exArray[1] ? exArray[1] : exArray[0] // 下标为0是前置摄像头，1为后置摄像头，所以PC不能进入该判断，否则画面会保持在第一帧不动
-            }]
+            video: {
+              deviceId: videoSource ? {
+                exact: videoSource
+              } : undefined
+            }
           }
         };
         navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices)
@@ -109,48 +110,13 @@
     // 摄像机成功回调
     function gotStream(stream) {
       window.stream = stream;
-      var videoTracks = stream.getVideoTracks();
       this.isOpenCamera = true
-      stream.onremovetrack = function () {
-        console.log('Stream ended');
-      };
-      if (video.mozSrcObject !== undefined) {
-        video.mozSrcObject = stream;
-      } else {
-        try {
-          video.src = window.URL && window.URL.createObjectURL(stream) || stream;
-        } catch (e) {
-          try {
-            video.srcObject = stream;
-          } catch (error) {
-            console.log(error)
-          }
-        }
-      }
+      video.srcObject = stream;
       navigator.mediaDevices.enumerateDevices();
     }
     //失败的回调
     function handleError(e) {
       alert('【Error！】回调失败' + e);
-    }
-    // 获取存储设备源ID
-    function getSources() {
-      let exArray = []; //存储设备源ID
-      try {
-        MediaStreamTrack.getSources(function (sourceInfos) {
-          for (let i = 0; i != sourceInfos.length; ++i) {
-            let sourceInfo = sourceInfos[i];
-            //这里会遍历audio,video，所以要加以区分
-            if (sourceInfo.kind === 'video') {
-              exArray.push(sourceInfo.id);
-            }
-          }
-        });
-      } catch (e) {
-        console.log('[获取存储设备源ID]', e)
-      }
-      this.isOpenCamera = true
-      return exArray
     }
 
     //拍照
