@@ -79,21 +79,21 @@
 
     // 开启摄像头
     function startOpenCamera() {
-      if (window.stream) {
-        window.stream.getTracks().forEach(track => {
-          track.stop();
+      // if (window.stream) {
+      //   window.stream.getTracks().forEach(track => {
+      //     track.stop();
 
-        });
-      }
+      //   });
+      // }
       navigator.getUserMedia = navigator.getUserMedia || navigator
         .webkitGetUserMedia || navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia
 
       if (navigator.getUserMedia) {
 
         if (this.isOpenCamera) return console.log('[已经开启过摄像头的权限了]');
+        alert(exArray, 'exArray')
 
         const constraints = {
-
           video: {
             optional: [{
               'sourceId': exArray[1] ? exArray[1] : exArray[0] // 下标为0是前置摄像头，1为后置摄像头，所以PC不能进入该判断，否则画面会保持在第一帧不动
